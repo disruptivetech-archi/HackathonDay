@@ -2,7 +2,7 @@ import os
 import openai
 from typing import Dict, List, Any
 
-openai.api_key = os.getenv("OPENAI_API_KEY", "your-api-key-here")
+openai.api_key = os.getenv("OPENAI_API_KEY", "sk-demo-key123456789")
 
 def generate_summary(transcript: str) -> Dict[str, Any]:
     """
