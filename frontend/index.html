@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Summarizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add Chart.js for sentiment visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Meeting Summarizer</h1>
+            <p>Upload your meeting transcript to get intelligent insights</p>
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <h2>Upload Transcript</h2>
+                <div class="upload-container">
+                    <textarea id="transcript" placeholder="Paste your meeting transcript here..."></textarea>
+                    <div class="file-upload">
+                        <label for="file-input" class="file-label">Or upload a file</label>
+                        <input type="file" id="file-input" accept=".txt,.doc,.docx,.pdf">
+                    </div>
+                    <button id="analyze-btn" class="primary-btn">Analyze Meeting</button>
+                </div>
+            </section>
+
+            <div id="results" class="hidden">
+                <section class="summary-section">
+                    <h2>Meeting Summary</h2>
+                    <div class="summary-container">
+                        <div class="summary-card">
+                            <h3>Key Discussion Points</h3>
+                            <ul id="key-points"></ul>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Action Items</h3>
+                            <ul id="action-items"></ul>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Decisions Made</h3>
+                            <ul id="decisions"></ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="sentiment-section">
+                    <h2>Sentiment Analysis</h2>
+                    <div class="sentiment-container">
+                        <div class="sentiment-overview">
+                            <div id="overall-sentiment"></div>
+                            <div id="sentiment-score"></div>
+                        </div>
+                        <div class="sentiment-chart">
+                            <canvas id="sentiment-chart"></canvas>
+                        </div>
+                        <div class="sentiment-details">
+                            <h3>Tension Points</h3>
+                            <ul id="tension-points"></ul>
+                            <h3>Team Morale Indicators</h3>
+                            <ul id="morale-indicators"></ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="coach-section">
+                    <h2>AI Meeting Coach</h2>
+                    <div class="coach-container">
+                        <div class="effectiveness-score">
+                            <h3>Meeting Effectiveness</h3>
+                            <div id="effectiveness-meter"></div>
+                            <div id="effectiveness-score"></div>
+                        </div>
+                        <div class="coach-feedback">
+                            <div class="feedback-column">
+                                <h3>Strengths</h3>
+                                <ul id="strengths"></ul>
+                            </div>
+                            <div class="feedback-column">
+                                <h3>Areas for Improvement</h3>
+                                <ul id="improvement-areas"></ul>
+                            </div>
+                        </div>
+                        <div class="coach-recommendations">
+                            <h3>Recommendations</h3>
+                            <ul id="recommendations"></ul>
+                        </div>
+                        <div class="participation-balance">
+                            <h3>Participation Balance</h3>
+                            <div id="participation-description"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="chat-section">
+                    <h2>Ask Follow-up Questions</h2>
+                    <div class="chat-container">
+                        <div id="chat-messages" class="chat-messages"></div>
+                        <div class="chat-input">
+                            <input type="text" id="question-input" placeholder="Ask a question about the meeting...">
+                            <button id="send-btn">Send</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <p>Meeting Summarizer - Powered by AI</p>
+        </footer>
+    </div>
+
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Analyzing your meeting...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
