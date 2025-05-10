@@ -1,6 +1,7 @@
 let transcript = '';
 let chatHistory = [];
-const API_BASE_URL = 'http://localhost:8000/api'; // Change this to your deployed API URL in production
+// Use relative URL for local development, or configure via environment variables for production
+const API_BASE_URL = '/api';
 
 document.addEventListener('DOMContentLoaded', () => {
     const transcriptTextarea = document.getElementById('transcript');
