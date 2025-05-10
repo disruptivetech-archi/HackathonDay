@@ -79,7 +79,8 @@ button {
 
 .primary-btn {
     background-color: var(--soft-pink-light);
-    color: var(--dark-color);
+    color: var(--primary-color);
+    font-weight: bold;
     border: 2px solid var(--soft-pink-dark);
 }
 
