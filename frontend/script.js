@@ -1,6 +1,6 @@
 let transcript = '';
 let chatHistory = [];
-const API_BASE_URL = 'http://localhost:8000/api'; // Change this to your deployed API URL in production
+const API_BASE_URL = 'https://user:1cc56c02ead00d26645dccd55601306a@hackathon-repo-app-tunnel-x8f039dl.devinapps.com/api';
 
 document.addEventListener('DOMContentLoaded', () => {
     const transcriptTextarea = document.getElementById('transcript');
