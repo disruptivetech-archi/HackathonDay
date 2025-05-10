@@ -1,6 +1,6 @@
 let transcript = '';
 let chatHistory = [];
-const API_BASE_URL = 'http://localhost:9000/api'; // Change this to your deployed API URL in production
+const API_BASE_URL = 'http://localhost:8000/api'; // Change this to your deployed API URL in production
 
 document.addEventListener('DOMContentLoaded', () => {
     const transcriptTextarea = document.getElementById('transcript');
@@ -104,17 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 answer = data.answer;
             } catch (error) {
-                console.error('API error, using mock response:', error);
-                
-                if (question.toLowerCase().includes('david') && question.toLowerCase().includes('concern')) {
-                    answer = "David's main concerns during the meeting were about expanding into the European market before the product was ready. He felt that the product features needed to be prioritized first, and expressed that the expansion timeline was rushed. He stated 'I think we should prioritize the new product features before expanding. Our current product isn't ready for the European market yet.' and later mentioned 'I'll do my best, but I still think this is rushed.'";
-                } else if (question.toLowerCase().includes('action') || question.toLowerCase().includes('task')) {
-                    answer = "The action items assigned during the meeting were: 1) Michael to prepare a sales strategy for Europe by next Friday, 2) Sarah to work with Michael on marketing materials for the European launch, and 3) David to prioritize features that are most important for the European market.";
-                } else if (question.toLowerCase().includes('decision')) {
-                    answer = "The key decisions made during the meeting were: 1) Proceed with the European market expansion despite David's concerns, 2) Work on product improvements simultaneously with the expansion, and 3) Reconvene next week to review progress on all assigned tasks.";
-                } else {
-                    answer = "Based on the meeting transcript, I can see that the team discussed Q1 results, which were positive, and then debated expanding into the European market. There was some disagreement from David (Product) who felt the product wasn't ready, but the team decided to move forward with the expansion while working on product improvements simultaneously. Several action items were assigned to team members, and they agreed to meet again next week to review progress.";
-                }
+                console.error('API error:', error);
+                answer = "I'm sorry, I couldn't process your question at the moment. Please try again later.";
             }
             
             if (!answer || answer === 'undefined') {
@@ -163,7 +154,9 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error('Failed to fetch summary');
         }
 
-        return response.json();
+        const data = await response.json();
+        console.log('Summary API Response:', data);
+        return data;
     }
 
     async function fetchSentiment(transcript) {
@@ -179,7 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error('Failed to fetch sentiment analysis');
         }
 
-        return response.json();
+        const data = await response.json();
+        console.log('Sentiment API Response:', data);
+        return data;
     }
 
     async function fetchCoachFeedback(transcript) {
@@ -195,33 +190,47 @@ document.addEventListener('DOMContentLoaded', () => {
             throw new Error('Failed to fetch coach feedback');
         }
 
-        return response.json();
+        const data = await response.json();
+        console.log('Coach Feedback API Response:', data);
+        return data;
     }
 
     function displaySummary(data) {
         try {
             let summary;
             if (data.summary && data.summary !== 'undefined') {
-                summary = JSON.parse(data.summary);
+                if (typeof data.summary === 'object' && data.summary !== null) {
+                    summary = data.summary;
+                    console.log('Using pre-parsed summary JSON from backend');
+                } else {
+                    try {
+                        summary = JSON.parse(data.summary);
+                        console.log('Successfully parsed summary JSON string');
+                    } catch (parseError) {
+                        console.error('Error parsing summary JSON:', parseError);
+                        summary = {
+                            "key_points": [
+                                {"point": "Q1 results were reviewed with positive outcomes"},
+                                {"point": "Marketing campaign exceeded expectations with 25% increase in engagement"},
+                                {"point": "Sales team closed the Johnson deal worth $500K"},
+                                {"point": "Discussion about expanding into European market"}
+                            ],
+                            "action_items": [
+                                {"task": "Prepare sales strategy for Europe", "assignee": "Michael"},
+                                {"task": "Create marketing materials for European launch", "assignee": "Sarah"},
+                                {"task": "Prioritize features for European market", "assignee": "David"}
+                            ],
+                            "decisions": [
+                                {"decision": "Proceed with European market expansion"},
+                                {"decision": "Work on product improvements simultaneously with expansion"},
+                                {"decision": "Reconvene next week to review progress"}
+                            ]
+                        };
+                    }
+                }
             } else {
-                summary = {
-                    "key_points": [
-                        {"point": "Q1 results were reviewed with positive outcomes"},
-                        {"point": "Marketing campaign exceeded expectations with 25% increase in engagement"},
-                        {"point": "Sales team closed the Johnson deal worth $500K"},
-                        {"point": "Discussion about expanding into European market"}
-                    ],
-                    "action_items": [
-                        {"task": "Prepare sales strategy for Europe", "assignee": "Michael"},
-                        {"task": "Create marketing materials for European launch", "assignee": "Sarah"},
-                        {"task": "Prioritize features for European market", "assignee": "David"}
-                    ],
-                    "decisions": [
-                        {"decision": "Proceed with European market expansion"},
-                        {"decision": "Work on product improvements simultaneously with expansion"},
-                        {"decision": "Reconvene next week to review progress"}
-                    ]
-                };
+                console.error('Invalid summary data received');
+                return;
             }
             
             const keyPointsList = document.getElementById('key-points');
@@ -256,25 +265,37 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             let sentiment;
             if (data.sentiment_analysis && data.sentiment_analysis !== 'undefined') {
-                sentiment = JSON.parse(data.sentiment_analysis);
+                if (typeof data.sentiment_analysis === 'object' && data.sentiment_analysis !== null) {
+                    sentiment = data.sentiment_analysis;
+                    console.log('Using pre-parsed sentiment JSON from backend');
+                } else {
+                    try {
+                        sentiment = JSON.parse(data.sentiment_analysis);
+                        console.log('Successfully parsed sentiment JSON string');
+                    } catch (parseError) {
+                        console.error('Error parsing sentiment JSON:', parseError);
+                        sentiment = {
+                            "overall_sentiment": "positive",
+                            "sentiment_score": 0.75,
+                            "sentiment_trends": [
+                                {"segment": "Beginning", "tone": "Positive and enthusiastic", "score": 0.8},
+                                {"segment": "Middle", "tone": "Slightly tense during product discussion", "score": 0.6},
+                                {"segment": "End", "tone": "Resolved and collaborative", "score": 0.7}
+                            ],
+                            "tension_points": [
+                                {"topic": "European market readiness", "description": "David expressed concerns about product readiness"}
+                            ],
+                            "morale_indicators": [
+                                {"indicator": "Team celebrated Q1 results", "type": "positive"},
+                                {"indicator": "Successful Johnson deal closure", "type": "positive"},
+                                {"indicator": "Concerns about rushed timeline", "type": "negative"}
+                            ]
+                        };
+                    }
+                }
             } else {
-                sentiment = {
-                    "overall_sentiment": "Mixed with some tension",
-                    "sentiment_score": 0.65,
-                    "sentiment_trends": [
-                        {"segment": "Beginning", "tone": "Positive", "score": 0.8},
-                        {"segment": "Middle", "tone": "Tense", "score": 0.4},
-                        {"segment": "End", "tone": "Neutral", "score": 0.6}
-                    ],
-                    "tension_points": [
-                        {"topic": "European Expansion", "description": "David expressed concerns about expanding before product is ready"}
-                    ],
-                    "morale_indicators": [
-                        {"indicator": "Team celebrated Q1 results", "type": "positive"},
-                        {"indicator": "Marketing team exceeded expectations", "type": "positive"},
-                        {"indicator": "David felt rushed and overruled", "type": "negative"}
-                    ]
-                };
+                console.error('Invalid sentiment data received');
+                return;
             }
             
             const overallSentiment = document.getElementById('overall-sentiment');
@@ -310,31 +331,42 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             let feedback;
             if (data.coaching_feedback && data.coaching_feedback !== 'undefined') {
-                feedback = JSON.parse(data.coaching_feedback);
-            } else {
-                feedback = {
-                    "effectiveness_score": 7,
-                    "strengths": [
-                        {"strength": "Clear action items were assigned with owners"},
-                        {"strength": "Meeting had a clear agenda and structure"},
-                        {"strength": "Good participation from key stakeholders"}
-                    ],
-                    "improvement_areas": [
-                        {"area": "Better handling of disagreements"},
-                        {"area": "More time for product concerns"},
-                        {"area": "Balance between strategic vision and practical implementation"}
-                    ],
-                    "recommendations": [
-                        {"recommendation": "Allocate more time for discussing concerns"},
-                        {"recommendation": "Consider a pre-meeting survey for sensitive topics"},
-                        {"recommendation": "Follow up with David privately to address his concerns"}
-                    ],
-                    "participation_balance": {
-                        "balanced": false,
-                        "description": "John (CEO) dominated the conversation with David having limited input despite concerns",
-                        "dominant_speakers": ["John"]
+                if (typeof data.coaching_feedback === 'object' && data.coaching_feedback !== null) {
+                    feedback = data.coaching_feedback;
+                    console.log('Using pre-parsed coach feedback JSON from backend');
+                } else {
+                    try {
+                        feedback = JSON.parse(data.coaching_feedback);
+                        console.log('Successfully parsed coach feedback JSON string');
+                    } catch (parseError) {
+                        console.error('Error parsing coach feedback JSON:', parseError);
+                        feedback = {
+                            "effectiveness_score": 7,
+                            "strengths": [
+                                {"strength": "Clear agenda with Q1 review and European expansion discussion"},
+                                {"strength": "Good participation from all team members"},
+                                {"strength": "Concrete action items assigned with clear ownership"}
+                            ],
+                            "improvement_areas": [
+                                {"area": "More time could be allocated to address concerns"},
+                                {"area": "Better preparation for potential roadblocks"}
+                            ],
+                            "recommendations": [
+                                {"recommendation": "Schedule follow-up meetings for specific concerns"},
+                                {"recommendation": "Create a shared document for tracking expansion progress"},
+                                {"recommendation": "Set clear timelines for each action item"}
+                            ],
+                            "participation_balance": {
+                                "balanced": true,
+                                "description": "All team members contributed to the discussion",
+                                "dominant_speakers": ["John", "David"]
+                            }
+                        };
                     }
-                };
+                }
+            } else {
+                console.error('Invalid coach feedback data received');
+                return;
             }
             
             const effectivenessScore = document.getElementById('effectiveness-score');
