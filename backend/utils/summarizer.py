@@ -3,8 +3,12 @@ import json
 import requests
 from typing import Dict, List, Any
 
-api_key = os.getenv("OPENAI_API_KEY", "sk-demo-key123456789")
-use_mock_data = True
+api_key = os.getenv("OPENAI_API_KEY", "")
+azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT", "https://api-chatgpt-nm-2.openai.azure.com/")
+azure_model = os.getenv("AZURE_OPENAI_MODEL", "gpt-4.1")
+azure_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4.1")
+azure_api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview")
+use_mock_data = False
 
 def generate_summary(transcript: str) -> Dict[str, Any]:
     """
@@ -75,11 +79,10 @@ def generate_summary(transcript: str) -> Dict[str, Any]:
     try:
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
+            "api-key": api_key
         }
         
         payload = {
-            "model": "gpt-4",
             "messages": [
                 {"role": "system", "content": "You are a meeting summarization assistant."},
                 {"role": "user", "content": prompt}
@@ -88,8 +91,10 @@ def generate_summary(transcript: str) -> Dict[str, Any]:
             "max_tokens": 1000
         }
         
+        azure_url = f"{azure_endpoint}openai/deployments/{azure_deployment}/chat/completions?api-version={azure_api_version}"
+        
         response = requests.post(
-            "https://api.openai.com/v1/chat/completions",
+            azure_url,
             headers=headers,
             json=payload
         )
@@ -188,11 +193,10 @@ def analyze_sentiment(transcript: str) -> Dict[str, Any]:
     try:
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
+            "api-key": api_key
         }
         
         payload = {
-            "model": "gpt-4",
             "messages": [
                 {"role": "system", "content": "You are a meeting sentiment analysis assistant."},
                 {"role": "user", "content": prompt}
@@ -201,8 +205,10 @@ def analyze_sentiment(transcript: str) -> Dict[str, Any]:
             "max_tokens": 1000
         }
         
+        azure_url = f"{azure_endpoint}openai/deployments/{azure_deployment}/chat/completions?api-version={azure_api_version}"
+        
         response = requests.post(
-            "https://api.openai.com/v1/chat/completions",
+            azure_url,
             headers=headers,
             json=payload
         )
@@ -313,11 +319,10 @@ def generate_coach_feedback(transcript: str) -> Dict[str, Any]:
     try:
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
+            "api-key": api_key
         }
         
         payload = {
-            "model": "gpt-4",
             "messages": [
                 {"role": "system", "content": "You are a meeting effectiveness coach."},
                 {"role": "user", "content": prompt}
@@ -326,8 +331,10 @@ def generate_coach_feedback(transcript: str) -> Dict[str, Any]:
             "max_tokens": 1000
         }
         
+        azure_url = f"{azure_endpoint}openai/deployments/{azure_deployment}/chat/completions?api-version={azure_api_version}"
+        
         response = requests.post(
-            "https://api.openai.com/v1/chat/completions",
+            azure_url,
             headers=headers,
             json=payload
         )
@@ -426,18 +433,19 @@ def handle_chat(transcript: str, question: str, chat_history: List[Dict[str, str
     try:
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}"
+            "api-key": api_key
         }
         
         payload = {
-            "model": "gpt-4",
             "messages": messages,
             "temperature": 0.5,
             "max_tokens": 500
         }
         
+        azure_url = f"{azure_endpoint}openai/deployments/{azure_deployment}/chat/completions?api-version={azure_api_version}"
+        
         response = requests.post(
-            "https://api.openai.com/v1/chat/completions",
+            azure_url,
             headers=headers,
             json=payload
         )
