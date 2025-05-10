@@ -1,7 +1,6 @@
 let transcript = '';
 let chatHistory = [];
-// Use relative URL for local development, or configure via environment variables for production
-const API_BASE_URL = '/api';
+const API_BASE_URL = 'http://localhost:8000/api';
 
 document.addEventListener('DOMContentLoaded', () => {
     const transcriptTextarea = document.getElementById('transcript');
