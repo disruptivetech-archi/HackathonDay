@@ -4,7 +4,7 @@ import requests
 from typing import Dict, List, Any
 
 api_key = os.getenv("OPENAI_API_KEY", "sk-demo-key123456789")
-use_mock_data = True
+use_mock_data = False
 
 def generate_summary(transcript: str) -> Dict[str, Any]:
     """
