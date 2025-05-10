@@ -170,9 +170,18 @@ input[type="file"] {
 }
 
 .sentiment-details {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    flex-direction: row;
     gap: 20px;
+}
+
+.tension-points-container,
+.morale-indicators-container {
+    flex: 1;
+    min-width: 300px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
 }
 
 /* Coach Section */
