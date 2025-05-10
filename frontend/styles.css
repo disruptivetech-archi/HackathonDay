@@ -78,8 +78,9 @@ button {
 }
 
 .primary-btn {
-    background-color: var(--soft-pink-dark);
-    color: white;
+    background-color: var(--soft-pink-light);
+    color: var(--dark-color);
+    border: 2px solid var(--soft-pink-dark);
 }
 
 .primary-btn:hover {
