@@ -1,6 +1,7 @@
 let transcript = '';
 let chatHistory = [];
-const API_BASE_URL = 'https://user:1cc56c02ead00d26645dccd55601306a@hackathon-repo-app-tunnel-x8f039dl.devinapps.com/api';
+const API_BASE_URL = 'https://hackathon-repo-app-tunnel-x8f039dl.devinapps.com/api';
+const API_AUTH = 'Basic ' + btoa('user:1cc56c02ead00d26645dccd55601306a');
 
 document.addEventListener('DOMContentLoaded', () => {
     const transcriptTextarea = document.getElementById('transcript');
@@ -88,7 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch(`${API_BASE_URL}/chat`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': API_AUTH
                     },
                     body: JSON.stringify({
                         transcript,
@@ -145,7 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(`${API_BASE_URL}/summarize`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': API_AUTH
             },
             body: JSON.stringify({ transcript })
         });
@@ -163,7 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(`${API_BASE_URL}/analyze-sentiment`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': API_AUTH
             },
             body: JSON.stringify({ transcript })
         });
@@ -181,7 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(`${API_BASE_URL}/coach-feedback`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': API_AUTH
             },
             body: JSON.stringify({ transcript })
         });
